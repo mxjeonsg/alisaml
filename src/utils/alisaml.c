@@ -1,3 +1,17 @@
+/*
+* Source Code of the alisami lib
+* Warn: This is work in progress.
+* 
+*
+* This fike part of the 'App' official 
+* Source code.
+*
+* See 'License'
+*
+* 
+*/
+
+
 #pragma once
 
 #include "./types.h"

@@ -45,7 +45,7 @@ run it
 
 If you found a bug feel free to open an issue.
 
-If youwant to contrubuite to this project see [DOCS.](DOCS/doc.md)
+If you want to contrubuite to this project see [DOCS.](DOCS/doc.md)
 
 
 # Credits
