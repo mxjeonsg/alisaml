@@ -6,7 +6,7 @@
 #include <raylib.h>
 
 
-#include "../internal/alisaml.c"
+#include "./internal/alisaml.c"
 
 
 // Colour >> Color
