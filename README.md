@@ -1,9 +1,12 @@
 
 > [!WARNING]
 >
-> This is work in progress
-> The API is higly new and unstable
-> There may be some memory leaks
+>
+> This is work in progress.
+>
+> The API is higly new and unstable.
+>
+> There may be some memory leaks.
 
 # Alisami
 
@@ -39,10 +42,14 @@ run it
 
 
 # Help?
-If you found a bug or want to contrubuite to this project
-see [DOCS](DOCS/doc.md)
+
+If you found a bug feel free to open an issue.
+
+If youwant to contrubuite to this project see [DOCS.](DOCS/doc.md)
 
 
 # Credits
-Idea & Creator [Jeon](https://github.com/mxjeonsg)
-Port to Cmake by [Destro](https://github.com/destroK503)
+
+- **Idea & Creator [Jeon](https://github.com/mxjeonsg)**
+
+- **Port to Cmake by [Destro](https://github.com/destroK503)**
