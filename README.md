@@ -3,7 +3,9 @@
 >
 >
 > This is still hugely unmade.
+> 
 > The API is highly new and unstable
+> 
 > The developer isn't a proper developer
 >
 > There ARE some memory leaks
