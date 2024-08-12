@@ -47,6 +47,10 @@ If you found a bug, feel free to open an issue.
  an example of how to replicate the unexpected
  behaviour.)
 
+And if you want to provide any suggestion, solution or
+insight in general, fell free to open issues too.
+Maybe I get to learn something for more people than me. :D
+
 ## Credits:
 
 - **Idea & the responsible of this abomination of project [Jeon](https://github.com/mxjeonsg)**
