@@ -14,7 +14,7 @@
 typedef Color Colour;
 
 
-const u8* frame =
+const u8* proper_frame =
     "<Alisaml>" "\n"
     "  <Test>Content-Test</Test>" "\n"
     "  <AlisaContext>" "\n"
@@ -23,10 +23,10 @@ const u8* frame =
     "    <ScreenTargetFPS>60</ScreenTargetFPS>" "\n"
     "  </AlisaContext>" "\n"
     "  <head>" "\n"
-    "    <title>UwU</title>" "\n"
+    "    <title>Sample test</title>" "\n"
     "  </head>" "\n"
     "  <body>" "\n"
-    "    <Text>Sexoooooo</Text>" "\n"
+    "    <Text>Example text</Text>" "\n"
     "    <Test>Esto esta siendo demasiado demasiado estresante wbn</Test>" "\n"
     "  </body>" "\n"
     "</Alisaml>"
@@ -36,7 +36,7 @@ const u8* frame =
 
 const i32 main(void) {
     // XML parser context prepare
-    AlisamlCtx actx = initAlisaml(frame);
+    AlisamlCtx actx = initAlisaml(proper_frame);
     alisamlctx_parsesource(&actx);
 
     InitWindow(800, 600, "Sexo");
