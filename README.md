@@ -28,7 +28,7 @@ cd alisaml; mkdir build
 ```
 * Compile
 ``` bash
-cmake -G "MinGW Makefiles ." && make
+cmake -G "MinGW Makefiles " . && make
 ```
 * And give it a try
 ``` bash
