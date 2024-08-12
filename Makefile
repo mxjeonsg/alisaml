@@ -1,9 +1,10 @@
 FLAGS := -g
 OPTIMISE := -O0
-LIBS := -lraylib -lgdi32 -lwinmm
+INCLUDE := -Iinclude-external/raysan5-raylib
+LIBS := -lraylib -lwinmm -lgdi32
 
 build/main: src/main.c
-	powershell -c New-Item -ItemType Directory -Force -Path .\build
+	if [ -z "build" ]; then mkdir -p build; fi
 	clear
 	gcc -o build/main src/main.c $(LIBS) $(FLAGS) $(OPTIMISE) 
 
