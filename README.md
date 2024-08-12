@@ -1,5 +1,5 @@
 
-> [!WANING]
+> [!WARNING]
 >
 > This is work in progress
 > The API is higly new and unstable
