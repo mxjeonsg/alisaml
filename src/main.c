@@ -1,17 +1,19 @@
-// #pragma GCC diagnostic ignored "-fpermissive"
-
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../include-internal/types.h"
+#include "./internal/types.h"
 
 #include <raylib.h>
 
 
+#include "../internal/alisaml.c"
 
-#include "../include-internal/alisaml.c"
 
+// Colour >> Color
 typedef Color Colour;
+
+#define SCREEN_W 800
+#define SCREEN_H 600
 
 
 const u8* proper_frame =
@@ -32,21 +34,16 @@ const u8* proper_frame =
     "</Alisaml>"
 ;
 
-
-
 const i32 main(void) {
-    // XML parser context prepare
-    AlisamlCtx actx = initAlisaml(proper_frame);
-    alisamlctx_parsesource(&actx);
-
-    InitWindow(800, 600, "Sexo");
+    InitWindow(SCREEN_W, SCREEN_H, "Sexo");
+    SetTargetFPS(60);
     while(!WindowShouldClose()) {
         ClearBackground(RAYWHITE);
-        BeginDrawing(); {
-            DrawText("Sexito", 20, 20, 20, BLACK);
-        } EndDrawing();
+        BeginDrawing(); 
+        {
+            DrawText("Yeah, I think this is working.", 20, 20, 20, (Color){0x9, 0x7f, 0x9, 0xff});
+        }
+        EndDrawing();
     }
     CloseWindow();
-
-    destroyAlisaml(&actx);
 }
