@@ -49,3 +49,6 @@ If you found a bug, feel free to open an issue.
 
 - **Idea & the responsible of this abomination of project [Jeon](https://github.com/mxjeonsg)**
 - **Port from ugly Makefiles to based CMake by [Destro](https://github.com/destroK503)**
+
+- **Dependency: raylib (for the GUI) by [raysan5](https://github.com/raysan5) Official page [here](https://raylib.com) and repository [here](https://github.com/raysan5/raylib)**
+- **Dependency: The XML parser (for making my HTML copycat) by [ooxi](https://github.com/ooxi) Repository [here](https://github.com/ooxi/xml.c)**
