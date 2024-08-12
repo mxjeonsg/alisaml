@@ -1,4 +1,5 @@
-> [!!WARNING!!]
+
+> [!WARNING]
 >
 >
 > This is still hugely unmade.
