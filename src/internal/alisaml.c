@@ -4,7 +4,7 @@
 
 #include "./alisaml.h"
 
-#include "../external/ooxi-xml.c/xml.c"
+#include "./xmlparser.c"
 
 #include <raylib.h>
 
@@ -36,18 +36,17 @@ AlisamlCtx initAlisaml(const u8* src) {
     };
 
 
-    // this.source = malloc(sizeof(u8) * (strlen(src) + 2));
     allocateString(ctx.source, strlen(src) + 2);
-    ctx.document = xml_parse_document(src, strlen(src));
+    XmlParseDocument((u8*) src, strlen(src), ctx.document);
     if(ctx.document == 0) {
         printf("XML context init failed.\n");
         printf("XML context it's critical for the application. Aborting.\n");
         puts("Aborted (urmom overflow)");
         exit(2);
     }
-    ctx.rootElement = xml_document_root(ctx.document);
+    ctx.rootElement = XmlDocumentRoot(ctx.document);
 
-    if(xml_node_children(ctx.rootElement) <= 1) {
+    if(XmlNodeChildren(ctx.rootElement) <= 1) {
         printf("XML source it's non-valid.\n");
         destroyAlisaml(&ctx);
         exit(2);
@@ -121,7 +120,7 @@ const v0 destroyAlisaml(AlisamlCtx* ctx) {
 
     if(ctx->title != 0) free(ctx->title);
     free(ctx->source);
-    xml_document_free(ctx->document, false);
+    XmlDocumentFree(ctx->document, false);
     ctx->rootElement = 0;
     free(ctx->tag_buffer);
     ctx->tag_buffer_sz = 0;
@@ -137,21 +136,18 @@ AlisamlTag alisaml_gettagfromrootbysequence(AlisamlCtx* ctx, i32* result) {
     AlisamlTag ret;
     u64 toalloc = 0;
 
-    ret.node = xml_node_child(ctx->rootElement, ctx->seq++);
-    if(ret.node == 0) *result = -69;
+    if(!XmlNodeChild(ctx->rootElement, ctx->seq++, ret.node)) if(result != 0) *result = -24;
 
-    ret.inner_name = xml_node_name(ret.node);
-    toalloc = sizeof(u8) * xml_string_length(ret.inner_name) + 2;
-    // this.name = malloc(toalloc);
+    ret.inner_name = XmlNodeName(ret.node);
+    toalloc = sizeof(u8) * XmlStringLength(ret.inner_name) + 2;
     allocateString(ret.name, toalloc);
-    xml_string_copy(ret.inner_name, ret.name, xml_string_length(ret.inner_name));
-    ret.inner_value = xml_node_content(ret.node);
+    XmlStringCopy(ret.inner_name, ret.name, XmlStringLength(ret.inner_name));
+    ret.inner_value = XmlNodeContent(ret.node);
     ctx->ctxmemusage += toalloc;
 
-    toalloc = sizeof(u8) * xml_string_length(ret.inner_value) + 2;
-    // this.value = malloc(toalloc);
+    toalloc = sizeof(u8) * XmlStringLength(ret.inner_value) + 2;
     allocateString(ret.value, toalloc);
-    xml_string_copy(ret.inner_value, ret.value, xml_string_length(ret.inner_value));
+    XmlStringCopy(ret.inner_value, ret.value, XmlStringLength(ret.inner_value));
     ret.reserved = 0;
     ctx->ctxmemusage += toalloc;
 
@@ -161,8 +157,8 @@ AlisamlTag alisaml_gettagfromrootbysequence(AlisamlCtx* ctx, i32* result) {
 const v0 alisaml_destroytag(AlisamlCtx* ctx, AlisamlTag* tag) {
     free(tag->name);
     free(tag->value);
-    xml_string_free(tag->inner_name);
-    xml_string_free(tag->inner_value);
+    XmlStringFree(tag->inner_name);
+    XmlStringFree(tag->inner_value);
     tag->reserved = 0;
 }
 
@@ -325,21 +321,20 @@ const u1 alisamlctx_parsesource(AlisamlCtx* ctx) {
 AlisamlTag alisaml_getsubtagfromsupertagbysequence(AlisamlCtx* ctx, AlisamlTag* super, i32* result) {
     AlisamlTag this;
     u64 toalloc = 0;
-    this.node = xml_node_child(super->node, super->seq++);
+
+    XmlNodeChild(super->node, super->seq++, this.node);
     if(this.node == 0) *result = -68;
 
-    this.inner_name = xml_node_name(this.node);
-    toalloc = sizeof(u8) * xml_string_length(this.inner_name) + 2;
-    // this.name = malloc(toalloc);
+    this.inner_name = XmlNodeName(this.node);
+    toalloc = sizeof(u8) * XmlStringLength(this.inner_name) + 2;
     allocateString(this.name, toalloc + 2);
-    xml_string_copy(this.inner_name, this.name, xml_string_length(this.inner_name));
-    this.inner_value = xml_node_content(this.node);
+    XmlStringCopy(this.inner_name, this.name, XmlStringLength(this.inner_name));
+    this.inner_value = XmlNodeContent(this.node);
     ctx->ctxmemusage += toalloc;
 
-    toalloc = sizeof(u8) * xml_string_length(this.inner_value) + 2;
-    // this.value = malloc(toalloc);
+    toalloc = sizeof(u8) * XmlStringLength(this.inner_value) + 2;
     allocateString(this.name, toalloc + 2);
-    xml_string_copy(this.inner_value, this.value, xml_string_length(this.inner_value));
+    XmlStringCopy(this.inner_value, this.value, XmlStringLength(this.inner_value));
     this.reserved = 0;
     ctx->ctxmemusage += toalloc;
 

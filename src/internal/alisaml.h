@@ -1,38 +1,35 @@
 #pragma once
 
-#include "../external/ooxi-xml.c/xml.h"
+#include "./xmlparser.h"
 
 #include "./types.h"
-
-#include <string.h>
-
 
 
 // This represents a tag
 typedef struct alisamlTagObject {
     usize reserved_0;
-    struct xml_node*   node;
-    struct xml_string* inner_name;
-    u8*                name;
-    struct xml_string* inner_value;
-    u8*                value;
-    u1                 amContainer;
-    usize              seq;
-    void*              reserved; // This will be for tag attributes
+    XmlNode*   node;
+    XmlString* inner_name;
+    u8*        name;
+    XmlString* inner_value;
+    u8*        value;
+    u1         amContainer;
+    usize      seq;
+    void*      reserved; // This will be for tag attributes
 } AlisamlTag;
 
 // This is the context object (xml parsing and xml subset)
 typedef struct alisamlCtxObject {
-    u8*                  source;
-    struct xml_document* document;
-    struct xml_node*     rootElement;
-    AlisamlTag*          tag_buffer;
-    usize                tag_buffer_sz;
-    u8*                  title;
-    u32                  targetfps;
+    u8*          source;
+    XmlDocument* document;
+    XmlNode*     rootElement;
+    AlisamlTag*  tag_buffer;
+    usize        tag_buffer_sz;
+    u8*          title;
+    u32          targetfps;
 
-    usize                seq;
-    usize                ctxmemusage;
+    usize        seq;
+    usize        ctxmemusage;
 
     struct alusamlCtxNestedObjectCanvas {
         u32 res_x, res_y;
