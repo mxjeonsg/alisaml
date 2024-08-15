@@ -1,2 +1,11 @@
 w64devkit.lnk
 clean.sh
+_deps
+build
+CMakeFiles
+Alisaml.exe
+cmake_install.cmake
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+Makefile

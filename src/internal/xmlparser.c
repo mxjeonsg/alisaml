@@ -129,9 +129,9 @@ v0 XmlParserError(XmlParser* parser, XmlParserOffset offset, char const* msg) {
     }
 
     if(offset != NOCHARACTER) {
-        fprintf(stderr, "XmlParserEror at %d:%d (char: %c): %s.\n", row++, column, parser->buffer[character], msg);
+        fprintf(stderr, "XmlParserEror at %d:%d (char: %c): %s.\n", row + 1, column, parser->buffer[character], msg);
     } else {
-        fprintf(stderr, "XmlParserEror at %d:%d: %s.\n", row++, column, msg);
+        fprintf(stderr, "XmlParserEror at %d:%d: %s.\n", row + 1, column, msg);
     }
 }
 
@@ -188,7 +188,10 @@ u1 XmlParseTagEnd(XmlParser* parser, XmlString* to) {
         if(('>' == current) || isspace(current)) {
             break;
         } else {
-            XmlParserConsume(parser, 1);
+            if(!XmlParserConsume(parser, 1)) {
+                XmlParserError(parser, CURRENTCHARACTER, "XmlParseTagOpen: failed to consume.");
+                return False;
+            }
         }
     }
 
@@ -196,7 +199,11 @@ u1 XmlParseTagEnd(XmlParser* parser, XmlString* to) {
         XmlParserError(parser, CURRENTCHARACTER, "XmlParseTagEnd: Expected tag end");
         return False;
     }
-    XmlParserConsume(parser, 1);
+
+    if(!XmlParserConsume(parser, 1)) {
+        XmlParserError(parser, CURRENTCHARACTER, "XmlParseTagOpen: failed to consume.");
+        return False;
+    }
 
     to = malloc(sizeof(XmlString) * 1);
     to->buffer = &parser->buffer[start];
@@ -208,13 +215,20 @@ u1 XmlParseTagEnd(XmlParser* parser, XmlString* to) {
 u1 XmlParseTagOpen(XmlParser* parser, XmlString* to) {
     if(parser == 0) return False;
 
-    XmlSkipWhitespace(parser);
+    if(!XmlSkipWhitespace(parser)) {
+        XmlParserError(parser, CURRENTCHARACTER, "XmlParseTagOpen: failed to skip whitespace.");
+        return False;
+    }
 
     if('<' != XmlParserPeek(parser, CURRENTCHARACTER)) {
         XmlParserError(parser, CURRENTCHARACTER, "XmlParseTagOpen: expected opening tag.");
         return False;
     }
-    XmlParserConsume(parser, 1);
+
+    if(!XmlParserConsume(parser, 1)) {
+        XmlParserError(parser, CURRENTCHARACTER, "XmlParseTagOpen: failed to consume.");
+        return False;
+    }
 
     return XmlParseTagEnd(parser, to);
 }
@@ -285,10 +299,9 @@ u1 XmlParseNode(XmlParser* parser, XmlNode* to) {
     XmlNode** children = calloc(1, sizeof(XmlNode*));
     children[0] = 0;
 
-    XmlParseTagOpen(parser, tagopen);
-    if(tagopen == 0) {
-        XmlParserError(parser, NOCHARACTER, "XmlParseNode#TagOpen: ");
-        goto exit_failure; // TODO: Try to replace this
+    if(!XmlParseTagOpen(parser, tagopen)) {
+        XmlParserError(parser, NOCHARACTER, "XmlParseNode: failed XmlParseTagOpen.");
+        goto exit_failure;
     }
 
     if(tagopen->length > 0 && tagopen->buffer[tagopen->length - 1] == '/') {
@@ -297,7 +310,10 @@ u1 XmlParseNode(XmlParser* parser, XmlNode* to) {
     }
 
     if('<' != XmlParserPeek(parser, CURRENTCHARACTER)) {
-        XmlParseContent(parser, content);
+        if(!XmlParseContent(parser, content)) {
+            XmlParserError(parser, NOCHARACTER, "XmlParseNode: failed XmlParseContent.");
+            goto exit_failure;
+        }
 
         if(content == 0) {
             XmlParserError(parser, 0, "XmlParseNode#content");
@@ -305,7 +321,10 @@ u1 XmlParseNode(XmlParser* parser, XmlNode* to) {
         }
     } else while('/' != XmlParserPeek(parser, NEXTCHARACTER)) {
         XmlNode* child = 0;
-        XmlParseNode(parser, child);
+        if(!XmlParseNode(parser, child)) {
+            XmlParserError(parser, 0, "XmlParseNode: failed (recursive) call to XmlParseNode.");
+            goto exit_failure;
+        }
 
         if(child == 0) {
             XmlParserError(parser, NEXTCHARACTER, "XmlParseNode#child");
@@ -361,8 +380,8 @@ u1 XmlParseDocument(u8* buffer, const usize length, XmlDocument* to) {
         .length = length
     };
 
-    if(length != 0) {
-        XmlParserError(&parser, NOCHARACTER, "XmlPArsedocument: length equals zero.");
+    if(length == 0) {
+        XmlParserError(&parser, NOCHARACTER, "XmlParseDocument: length equals zero.");
         return False;
     }
 

@@ -15,7 +15,7 @@ typedef Color Colour;
 #define SCREEN_W 800
 #define SCREEN_H 600
 
-
+#if 0
 const u8* proper_frame =
     "<Alisaml>" "\n"
     "  <Test>Content-Test</Test>" "\n"
@@ -33,8 +33,15 @@ const u8* proper_frame =
     "  </body>" "\n"
     "</Alisaml>"
 ;
+#else
+const u8* proper_frame =
+    "<Alisaml></Alisaml>"
+;
+#endif
 
 const i32 main(void) {
+    AlisamlCtx ctx = initAlisaml(proper_frame);
+
     InitWindow(SCREEN_W, SCREEN_H, "Sexo");
     SetTargetFPS(60);
     while(!WindowShouldClose()) {
@@ -46,4 +53,6 @@ const i32 main(void) {
         EndDrawing();
     }
     CloseWindow();
+
+    destroyAlisaml(&ctx);
 }

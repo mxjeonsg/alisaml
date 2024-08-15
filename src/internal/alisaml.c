@@ -23,6 +23,24 @@ static u1 allocateString(i8* to, const usize size) {
 }
 
 AlisamlCtx initAlisaml(const u8* src) {
+    const AlisamlCtx DEFAULT_CTX = {
+        .source = 0,
+        .document = 0,
+        .rootElement = 0,
+        .tag_buffer = 0,
+        .tag_buffer_sz = 0,
+        .title = "from Alisaml!",
+        .targetfps = 45,
+        .seq = 0,
+        .ctxmemusage = (strlen(DEFAULT_CTX.title) + (sizeof(usize) * 3) + sizeof(u32)),
+        .canvas = {
+            .res_x = 800,
+            .res_y = 600,
+            .roll_x = 0,
+            .roll_y = 0
+        }
+    };
+
     AlisamlCtx ctx = {
         .tag_buffer_sz = 0,
         .canvas = {
@@ -37,7 +55,15 @@ AlisamlCtx initAlisaml(const u8* src) {
 
 
     allocateString(ctx.source, strlen(src) + 2);
-    XmlParseDocument((u8*) src, strlen(src), ctx.document);
+
+    // TODO: try to make this fallback to default instead of crashing.
+    if(!XmlParseDocument((u8*) src, strlen(src), ctx.document)) {
+        free(ctx.source);
+        printf("Failed XmlParseDocument.\n");
+        puts("Aborted (urmom overflow)");
+        exit(2);
+    }
+
     if(ctx.document == 0) {
         printf("XML context init failed.\n");
         printf("XML context it's critical for the application. Aborting.\n");
@@ -49,6 +75,7 @@ AlisamlCtx initAlisaml(const u8* src) {
     if(XmlNodeChildren(ctx.rootElement) <= 1) {
         printf("XML source it's non-valid.\n");
         destroyAlisaml(&ctx);
+        puts("Aborted (urmom overflow)");
         exit(2);
     }
 
@@ -126,8 +153,6 @@ const v0 destroyAlisaml(AlisamlCtx* ctx) {
     ctx->tag_buffer_sz = 0;
 
     printf("Context discarded.\n");
-
-    CloseWindow();
 
     return;
 }
@@ -249,13 +274,17 @@ const AlisamlTag alisamlctx_poptag(AlisamlCtx* ctx) {
 
     AlisamlTag ret;
     AlisamlTag* result = &ctx->tag_buffer[ctx->tag_buffer_sz--];
+
     ret.inner_name = result->inner_name;
     ret.inner_value = result->inner_value;
     ret.reserved_0 = result->reserved_0;
     ret.reserved = result->reserved;
     ret.node = result->node;
-    ret.name = result->name;
-    ret.value = result->value;
+
+    allocateString(ret.name, XmlStringLength(result->inner_name));
+    strncpy(ret.name, result->name, strlen(result->name));
+    allocateString(ret.name, XmlStringLength(result->inner_name));
+    strncpy(ret.name, result->name, strlen(result->name));
 
     ctx->ctxmemusage -= sizeof(*result);
 
