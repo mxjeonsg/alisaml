@@ -51,6 +51,16 @@ And if you want to provide any suggestion, solution or
 insight in general, fell free to open issues too.
 Maybe I get to learn something for more people than me. :D
 
+
+## Actual state of the project
+
+The project is currently in a STOPPED state. I'll come back to this
+project later, but my central goal was to make a GUI for my game engine,
+GUI that can come in hand for my game, but i need to start making the engine
+first, when it's ready to begin this, i'll come back to this project and continue
+with it's development. (Which will be pretty soon)
+So this is a disclaimer to clear i'm not abandoning this.
+
 ## Credits:
 
 - **Idea & the responsible of this abomination of project [Jeon](https://github.com/mxjeonsg)**
